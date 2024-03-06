@@ -2,6 +2,33 @@ require('dotenv').config();
 const express = require('express')
 const app = express()
 const port = process.env.PORT
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+
+// Conexion a mongoBD
+mongoose
+    .connect(process.env.MONGODB_URL)
+    .then(() => {
+        console.log("Conexion exitosa con la BBDD!")
+    })
+    .catch((err) =>
+        console.log("Hubo un error al conectarnos a la BBDD", {err})
+    )
+
+
+// Creando Schema  // genera restricciones
+const taskSchema = new Schema({
+    name: String,
+    done: Boolean
+    // createdBy:
+})
+
+const Task = mongoose.model("Task", taskSchema,  )
+
+
+
+
 
 // Middleware de archivos estaticos
 app.use(express.static("public"))
