@@ -1,53 +1,62 @@
 require('dotenv').config();
-const  http = require("http");
-const fs = require("fs");
+const express = require('express')
+const app = express()
+const port = process.env.PORT
+
+// Middleware de archivos estaticos
+app.use(express.static("public"))
+
+// Middleware para parsear el BODY de las request
+app.use(express.json())
 
 
-// const exportsFromAnother = require("./another")
-// console.log({ http})
 
-function requestController(req, res){
-    const url = req.url
-    const method = req.method
-    console.log({ url, method })
+// A) Pasamos una función anónima
+app.use((req, res, next) => {
+    console.log("No especificamos como debe ser el inicio de la ruta")
+    console.log("Middleware 1")
+    next()
+})
 
-    if (method === "GET" && url === "/"){
-        res.setHeader("Content-type", "text/html; charset=utf-8")
-        fs.readFile("./public/index.html", function(err, file){
-            if (err){
-                console.log("Hubo un error")
-            }
-        
-            res.write(file)
-            res.end()
-            })
-            return
-    }
-
-    if (method === "GET" && url === "/about"){
-        res.setHeader("Content-type", "text/html; charset=utf-8")
-        fs.readFile("./public/about.html", function(err, file){
-            if (err){
-                console.log("Hubo un error")
-            }
-        
-            res.write(file)
-            res.end()
-            })
-            return
-    }
-
-    res.setHeader("Content-type", "text/html; charset=utf-8")
-    res.write("<h1>Pagina no encontrada</h1>")
-    res.end()
+// B) Pasamos una funcion RETORNADA por OTRA FUNCION/METODO
+const logger = {
+    logThis: (whatToLog) => {
+        return (req, res, next) => {
+            console.log("Middleware 2: ", whatToLog)
+            next()
+        }
+    },
 }
 
+app.use("/martin", logger.logThis("Logueame estooo"))
 
-//configurar nuestro servidor
-const server = http.createServer(requestController)
 
-const PORT = process.env.PORT
+// Middleware para parsear BODY de la REQUEST (es como el caso "C")
+app.post("/api/tasks", function(req, res){
+    const body = req.body
+    console.log({ body })
+    res.status(201).json({ ok: true, message: "Tarea creada con éxito"})
+})
 
-server.listen(process.env.PORT, function(){
-    console.log("Aplicacion corriendo en puerto: " + PORT)
+
+
+
+
+// servir archivos estatico
+app.use(express.static('public'))
+
+
+// configurar RUTAS
+app.get('/', function (req, res) {
+    res.send('Hello World!')
+})
+
+app.get('/users', function (req, res) {
+    res.send([{ name: "Martin" }, { name: "Francisco" }])
+})
+
+
+// Poner a escuchar la APP en un puerto
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
 })
