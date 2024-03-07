@@ -24,18 +24,97 @@ const taskSchema = new Schema({
     // createdBy:
 })
 
-const Task = mongoose.model("Task", taskSchema,  )
-
-
+const Task = mongoose.model("Task", taskSchema, "Tasks")
 
 
 
 // Middleware de archivos estaticos
 app.use(express.static("public"))
+app.use(express.json())   // Middleware para parsear el BODY de las request
 
-// Middleware para parsear el BODY de las request
-app.use(express.json())
 
+// configurar RUTAS
+app.get('/api/tasks', function (req, res) {
+    Task.find().then((tasks) => {
+        res.status(200).json({ ok: true, data: tasks })
+    })
+    .catch((err) => {
+        res
+            .status(400)
+            .json({ ok: false, message: "Hubo un problema al obtener las tareas"})
+    })
+})
+
+
+app.post("/api/tasks", function(req, res){
+    const body = req.body
+    console.log({ body })
+    Task.create({
+        name: body.text,
+        done: false,
+        hello: "HOLA",
+    }).then((createdTask)=>{
+    res
+        .status(201)
+        .json({
+            ok: true,
+            message: "Tarea creada con éxito",
+            data: createdTask,
+        })
+    })
+    .catch(()=>{
+        res.status(400).json({ ok: false, message: "Error al crear la tarea" })
+    })
+})
+
+app.put("/api/tasks/:id", function(req, res){
+    const body = req.body
+    const id = req.params.id
+    
+    Task.findByIdAndUpdate(id, {
+        name: body.text,
+    })
+    .then((updatedTask)=>{
+        res
+        .status(200)
+        .json({
+            ok: true,
+            message: "Tarea editada con éxito",
+            data: updatedTask,
+        })
+    })
+    .catch(()=>{
+        res.status(400).json({ ok: false, message: "Error al editar la tarea" })
+    })
+})
+
+
+app.delete("/api/tasks/:id", function (req, res){
+    const id = req.params.id
+    Task.findByIdAndDelete(id).then((deletedTask) => {  // revisar el findByAndRemove
+        res.status(200).json({ ok: true, data: deletedTask })
+    }).catch(() => {
+        res
+        .status(400)
+        .json({ ok: false, message: "Hubo un error al eliminar la tarea" })
+    })
+    // console.log( { params: req.params, id })
+})
+
+
+/* 
+
+// app.get('/users', function (req, res) {
+//     res.send([{ name: "Martin" }, { name: "Francisco" }])
+// }) 
+
+*/
+
+
+// Poner a escuchar la APP en un puerto
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+})
 
 
 // A) Pasamos una función anónima
@@ -58,32 +137,7 @@ const logger = {
 app.use("/martin", logger.logThis("Logueame estooo"))
 
 
-// Middleware para parsear BODY de la REQUEST (es como el caso "C")
-app.post("/api/tasks", function(req, res){
-    const body = req.body
-    console.log({ body })
-    res.status(201).json({ ok: true, message: "Tarea creada con éxito"})
-})
-
-
-
-
 
 // servir archivos estatico
 app.use(express.static('public'))
 
-
-// configurar RUTAS
-app.get('/', function (req, res) {
-    res.send('Hello World!')
-})
-
-app.get('/users', function (req, res) {
-    res.send([{ name: "Martin" }, { name: "Francisco" }])
-})
-
-
-// Poner a escuchar la APP en un puerto
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
