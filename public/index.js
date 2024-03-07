@@ -159,7 +159,8 @@ const input = document.querySelector("#task-name")
 // })
 
 
-const baseBackendUrl = "http://localhost:4000/api"
+const baseBackendUrl = `${window.origin}/api`
+console.log({ window, baseBackendUrl })
 
 let TASK_TO_EDIT = null
 
