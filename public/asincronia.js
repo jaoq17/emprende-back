@@ -47,21 +47,21 @@ const makeRequest = (method, url) =>{
 
 // Callback HELL 
 const baseURL = "https://jsonplaceholder.typicode.com"
-console.time("Fetch took")
-const promise = fetch(`${baseURL}/users/1`)
-console.log({promise})
+
+function myFetch(url){
+    return fetch(url).then((res) => {
+        return res.json()})
+}
+
+const promise = myFetch(`${baseURL}/users/1`)
+
 
 promise
-    .then((res) => {
-        return res.json()
-})
-.then((user) => {
-    return fetch(`${baseURL}/posts?userId=${user.id}`)
-})
-.then((res) =>{
-    return res.json()
-}).then(posts => {
-    console.log({posts})
+    .then((user) => myFetch(`${baseURL}/posts?userId=${user.id}`))
+    .then((posts) => myFetch(`${baseURL}/comments?postId=${posts[0].id}`))
+
+    .then((comments) => {
+        console.log({ comments })
 })
 .catch((err) => {
     console.log("Todo salio mal", err)
@@ -69,6 +69,8 @@ promise
 .finally(() => {
     console.log("Esto se ejecutaria siempre")
 })
+
+
 
 // Peligro del INVERSION OF CONTROL
 // paypal.createOrder(orderInfo, () => {
