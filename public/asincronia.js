@@ -55,20 +55,35 @@ function myFetch(url){
 
 const promise = myFetch(`${baseURL}/users/1`)
 
+async function getUserData(id) {
+    try {
+        const user = await myFetch(`${baseURL}/users/${id}`)
+        console.log({ user })
+        const posts = await myFetch(`${baseURL}/posts?userId=${user.id}`)
+        const comments = await myFetch(`${baseURL}/comments?postId=${posts[0].id}`)
+        console.log({ user, posts, comments })
 
-promise
-    .then((user) => myFetch(`${baseURL}/posts?userId=${user.id}`))
-    .then((posts) => myFetch(`${baseURL}/comments?postId=${posts[0].id}`))
+    } catch (error) {
+        console.log({ error })
+    } finally {
+        console.log("ESTO VA SIEMPRE")
+    } 
+}
 
-    .then((comments) => {
-        console.log({ comments })
-})
-.catch((err) => {
-    console.log("Todo salio mal", err)
-})
-.finally(() => {
-    console.log("Esto se ejecutaria siempre")
-})
+getUserData(5)
+// promise
+//     .then((user) => )
+//     .then((posts) => )
+
+//     .then((comments) => {
+//         console.log({ comments })
+// })
+// .catch((err) => {
+//     console.log("Todo salio mal", err)
+// })
+// .finally(() => {
+//     console.log("Esto se ejecutaria siempre")
+// })
 
 
 

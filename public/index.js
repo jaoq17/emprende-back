@@ -169,36 +169,33 @@ let TASK_TO_EDIT = null
 
 
 // Nutrir de funcionalidad a los botones
-createEditBtn.addEventListener("click", function (){
+createEditBtn.addEventListener("click", async function (){
     console.log("CLICK!!")
     const creating = !TASK_TO_EDIT
     const path = creating ? "tasks" : `tasks/${TASK_TO_EDIT._id}`
     const method = creating ? "POST" : "PUT"
-    // fetch(`${baseBackendUrl}/${path}`, {
-    //     method,
-    //     headers: { "Content-type": "application/json"},
-    //     body: JSON.stringify({ text: input.value}),
-    // })
-    //     .then((res) => {
-    //         getTasks()
-    //         input.value = ""
-    //         createEditBtn.innerText = "Crear tarea"
-    //         return res.json()
-    // })
-    //     .then((resJSON)=>{
-    //     console.log({resJSON})
-    // })
+
+
+    const res = await fetch(`${baseBackendUrl}/${path}`, {
+        method,
+        headers: { "Content-type": "application/json"},
+        body: JSON.stringify({ text: input.value}),
+    })
+    getTasks()
+    input.value = ""
+    createEditBtn.innerText = "Crear tarea"
+    const resJSON = await res.json()
+        
+    console.log({resJSON})
 })
 
-function getTasks(){
+async function getTasks(){
     tasksDiv.innerHTML = null
-    fetch(`${baseBackendUrl}/tasks`)
-        .then((res) => {
-            return res.json()
-        })
-        .then((resJSON)=>{
-            const tasks = resJSON.data
-            for (const task of tasks) {
+    // console.log("Fetching took")
+    const res = await fetch(`${baseBackendUrl}/tasks`)
+    const resJSON = await res.json()
+    const tasks = resJSON.data
+        for (const task of tasks) {
                 const taskParagraph = document.createElement('p')
                 const deleteTaskBtn = document.createElement('button')
                 const taskContainerDiv = document.createElement('div')
@@ -226,8 +223,8 @@ function getTasks(){
                 taskContainerDiv.appendChild(deleteTaskBtn)
                 tasksDiv.appendChild(taskContainerDiv)
 
-            } 
-    })
+        } 
+
 }
 
 getTasks()
