@@ -4,7 +4,7 @@ const app = express()
 const port = process.env.PORT
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-
+const transporter = require("./helpers/mailer")
 
 // Conexion a mongoBD
 mongoose
@@ -100,6 +100,19 @@ app.delete("/api/tasks/:id", function (req, res){
     })
     // console.log( { params: req.params, id })
 })
+
+app.post("/api/auth/login/:email/code", async function (req, res){
+    const { email } = req.params
+    const result = await transporter.sendMail({
+        from: `Martin Gesualdo ${process.env.EMAIL}`,
+        to: email,
+        subject: "Código de inicio de sesió: ",
+        body: "Este es tu código para iniciar sesión: "
+    })
+    console.log({ result })
+    res.status(200).json({ok: true, message: "Código enviado con éxito" })
+})
+
 
 
 /* 
