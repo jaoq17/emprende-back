@@ -9,14 +9,14 @@
 
 
 // Ojo con las operaciones SINCRONAS
-console.time("Loop took")
-let total = 0
-for (let index = 0; index < 500_000_000; index++){
-    total += index
-}
-console.timeEnd("Loop took")
+// console.time("Loop took")
+// let total = 0
+// for (let index = 0; index < 500_000_000; index++){
+//     total += index
+// }
+// console.timeEnd("Loop took")
 
-console.log("Finalizo el loop", total)
+// console.log("Finalizo el loop", total)
 
 
 const makeRequest = (method, url) =>{
@@ -28,14 +28,14 @@ const makeRequest = (method, url) =>{
     xhr.onload = () => {
         // console.log({ xhr})
         if (xhr.status >= 200 && xhr.status < 300){
-            callback(null, xhr.response)
+            resolve(null, xhr.response)
         }else{
-            callback(new Error(xhr.statusText), null)
+            reject(new Error(xhr.statusText))
         }
     }
 
     xhr.onerror = () => {
-        callback(new Error("Network error"), null)
+        reject(new Error("Network error"))
     }
     xhr.send()
     })
@@ -48,20 +48,26 @@ const makeRequest = (method, url) =>{
 // Callback HELL 
 const baseURL = "https://jsonplaceholder.typicode.com"
 console.time("Fetch took")
-makeRequest("GET", `${baseURL}/users/1`, (err, user) => {
-    console.log({ user })
-    makeRequest("GET", `${baseURL}/posts?userId=${user.id}`, (err, posts) => {
-        console.log({ posts })
-        const post = posts[0]
-        makeRequest(
-            "GET",
-            `${baseURL}/comments?postId=${post.id}`,
-            (err, comments) => {
-                console.log({ comments})
-                console.timeEnd("Fetch took")
-            }
-        )
-    })
+const promise = fetch(`${baseURL}/users/1`)
+console.log({promise})
+
+promise
+    .then((res) => {
+        return res.json()
+})
+.then((user) => {
+    return fetch(`${baseURL}/posts?userId=${user.id}`)
+})
+.then((res) =>{
+    return res.json()
+}).then(posts => {
+    console.log({posts})
+})
+.catch((err) => {
+    console.log("Todo salio mal", err)
+})
+.finally(() => {
+    console.log("Esto se ejecutaria siempre")
 })
 
 // Peligro del INVERSION OF CONTROL
