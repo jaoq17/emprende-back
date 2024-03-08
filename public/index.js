@@ -215,8 +215,8 @@ function getTasks(){
                     input.value = task.name
                     createEditBtn.innerText = "Editar tarea"
                     TASK_TO_EDIT = task
-                    input.value = ""
                     console.log({TASK_TO_EDIT})
+                    input.value = ""
                 })
                 taskContainerDiv.appendChild(taskParagraph)
                 taskContainerDiv.appendChild(deleteTaskBtn)
