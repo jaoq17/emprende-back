@@ -159,30 +159,35 @@ const input = document.querySelector("#task-name")
 // })
 
 
-const baseBackendUrl = `${window.origin}/api`
-console.log({ window, baseBackendUrl })
+
+const baseBackendUrl = "http://localhost:4000/api"
+// const baseBackendUrl = `${window.origin}/api`
+// console.log({ window, baseBackendUrl })
+
 
 let TASK_TO_EDIT = null
 
+
 // Nutrir de funcionalidad a los botones
 createEditBtn.addEventListener("click", function (){
+    console.log("CLICK!!")
     const creating = !TASK_TO_EDIT
     const path = creating ? "tasks" : `tasks/${TASK_TO_EDIT._id}`
     const method = creating ? "POST" : "PUT"
-    fetch(`${baseBackendUrl}/${path}`, {
-        method,
-        headers: { "Content-type": "application/json"},
-        body: JSON.stringify({ text: input.value}),
-    })
-        .then((res) => {
-            getTasks()
-            input.value = ""
-            createEditBtn.innerText = "Crear tarea"
-            return res.json()
-    })
-        .then((resJSON)=>{
-        console.log({resJSON})
-    })
+    // fetch(`${baseBackendUrl}/${path}`, {
+    //     method,
+    //     headers: { "Content-type": "application/json"},
+    //     body: JSON.stringify({ text: input.value}),
+    // })
+    //     .then((res) => {
+    //         getTasks()
+    //         input.value = ""
+    //         createEditBtn.innerText = "Crear tarea"
+    //         return res.json()
+    // })
+    //     .then((resJSON)=>{
+    //     console.log({resJSON})
+    // })
 })
 
 function getTasks(){
@@ -216,7 +221,6 @@ function getTasks(){
                     createEditBtn.innerText = "Editar tarea"
                     TASK_TO_EDIT = task
                     console.log({TASK_TO_EDIT})
-                    input.value = ""
                 })
                 taskContainerDiv.appendChild(taskParagraph)
                 taskContainerDiv.appendChild(deleteTaskBtn)
