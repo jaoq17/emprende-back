@@ -12,9 +12,9 @@ const input = document.querySelector("#task-name")
 
 
 
-// const baseBackendUrl = "http://localhost:4000/api"
-const baseBackendUrl = `${window.origin}/api`
-console.log({ window, baseBackendUrl })
+const baseBackendUrl = "http://localhost:4000/api"
+// const baseBackendUrl = `${window.origin}/api`
+// console.log({ window, baseBackendUrl })
 
 
 let TASK_TO_EDIT = null
@@ -50,18 +50,19 @@ async function getTasks(){
     const tasks = resJSON.data
         for (const task of tasks) {
                 const taskParagraph = document.createElement('p')
-                const deleteTaskBtn = document.createElement('button')
+                const deleteTaskIcon = document.createElement('i')
                 const taskContainerDiv = document.createElement('div')
-                deleteTaskBtn.innerText = "Borrar"
+                // deleteTaskIcon.innerText = "Borrar"
+                deleteTaskIcon.classList.add("fa-solid", "fa-trash-can")
                 taskParagraph.innerText = task.name
-                deleteTaskBtn.setAttribute('id', task._id)
-                deleteTaskBtn.addEventListener('click', (e) =>{
+                deleteTaskIcon.setAttribute('id', task._id)
+                deleteTaskIcon.addEventListener('click', (e) =>{
                     const taskId = e.target.id
-                    deleteTaskBtn.innerText = "..."
+                    deleteTaskIcon.innerText = "..."
                     fetch(`${baseBackendUrl}/tasks/${taskId}`, {
                         method: "DELETE",
                     }).then(() => {
-                        const taskDiv =  deleteTaskBtn.parentElement
+                        const taskDiv =  deleteTaskIcon.parentElement
                         taskDiv.remove()
                     })
                     
@@ -73,7 +74,7 @@ async function getTasks(){
                     console.log({TASK_TO_EDIT})
                 })
                 taskContainerDiv.appendChild(taskParagraph)
-                taskContainerDiv.appendChild(deleteTaskBtn)
+                taskContainerDiv.appendChild(deleteTaskIcon)
                 tasksDiv.appendChild(taskContainerDiv)
 
         } 

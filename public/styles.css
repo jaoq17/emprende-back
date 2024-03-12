@@ -10,3 +10,15 @@ button {
 button:hover {
     opacity: 0.8;
 }
+
+
+.fa-trash-can { color: rgb(244, 54,54); cursor: pointer;}
+
+.fa-trash-can:hover{ opacity: 0.8;}
+
+
+span { margin-right: 1rem;}
+
+#tasks {
+    margin-top: 1rem;
+}
