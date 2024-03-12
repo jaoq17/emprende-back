@@ -27,7 +27,7 @@ const getCode = async function (req, res){
     await user.save()
 
     const result = await transporter.sendMail({
-        from: `Martin Gesualdo ${process.env.EMAIL}`,
+        from: `FADP ${process.env.EMAIL}`,
         to: email,
         subject: "Código de inicio de sesión:  " + code,
         body: "Este es tu código para iniciar sesión: "
