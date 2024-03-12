@@ -55,7 +55,7 @@ const login = async function (req, res){
         email: user.email,
     }
 
-    const token = jwt.sign(tokenPayload, proccess.env.JWT_SECRET_KEY)
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET_KEY)
     console.log({ token })
     res.cookie("jwt", token)
 

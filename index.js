@@ -62,7 +62,6 @@ app.listen(port, function () {
 // app.use("/martin", logger.logThis("Logueame estooo"))
 
 
-
 // servir archivos estatico
 // app.use(express.static('public'))
 

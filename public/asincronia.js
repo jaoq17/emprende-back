@@ -19,58 +19,58 @@
 // console.log("Finalizo el loop", total)
 
 
-const makeRequest = (method, url) =>{
-    const promise = new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest()
-    // console.log("Inicio fetching: ", { response: xhr.response})
-    xhr.open(method, url)
-    xhr.responseType = "json"
-    xhr.onload = () => {
-        // console.log({ xhr})
-        if (xhr.status >= 200 && xhr.status < 300){
-            resolve(null, xhr.response)
-        }else{
-            reject(new Error(xhr.statusText))
-        }
-    }
+// const makeRequest = (method, url) =>{
+//     const promise = new Promise((resolve, reject) => {
+//         const xhr = new XMLHttpRequest()
+//     // console.log("Inicio fetching: ", { response: xhr.response})
+//     xhr.open(method, url)
+//     xhr.responseType = "json"
+//     xhr.onload = () => {
+//         // console.log({ xhr})
+//         if (xhr.status >= 200 && xhr.status < 300){
+//             resolve(null, xhr.response)
+//         }else{
+//             reject(new Error(xhr.statusText))
+//         }
+//     }
 
-    xhr.onerror = () => {
-        reject(new Error("Network error"))
-    }
-    xhr.send()
-    })
+//     xhr.onerror = () => {
+//         reject(new Error("Network error"))
+//     }
+//     xhr.send()
+//     })
     
-    return promise
-}
+//     return promise
+// }
 
 
 
-// Callback HELL 
-const baseURL = "https://jsonplaceholder.typicode.com"
+// // Callback HELL 
+// const baseURL = "https://jsonplaceholder.typicode.com"
 
-function myFetch(url){
-    return fetch(url).then((res) => {
-        return res.json()})
-}
+// function myFetch(url){
+//     return fetch(url).then((res) => {
+//         return res.json()})
+// }
 
-const promise = myFetch(`${baseURL}/users/1`)
+// const promise = myFetch(`${baseURL}/users/1`)
 
-async function getUserData(id) {
-    try {
-        const user = await myFetch(`${baseURL}/users/${id}`)
-        console.log({ user })
-        const posts = await myFetch(`${baseURL}/posts?userId=${user.id}`)
-        const comments = await myFetch(`${baseURL}/comments?postId=${posts[0].id}`)
-        console.log({ user, posts, comments })
+// async function getUserData(id) {
+//     try {
+//         const user = await myFetch(`${baseURL}/users/${id}`)
+//         console.log({ user })
+//         const posts = await myFetch(`${baseURL}/posts?userId=${user.id}`)
+//         const comments = await myFetch(`${baseURL}/comments?postId=${posts[0].id}`)
+//         console.log({ user, posts, comments })
 
-    } catch (error) {
-        console.log({ error })
-    } finally {
-        console.log("ESTO VA SIEMPRE")
-    } 
-}
+//     } catch (error) {
+//         console.log({ error })
+//     } finally {
+//         console.log("ESTO VA SIEMPRE")
+//     } 
+// }
 
-getUserData(5)
+// getUserData(5)
 // promise
 //     .then((user) => )
 //     .then((posts) => )
